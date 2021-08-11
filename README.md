@@ -1,7 +1,7 @@
 MongoDB
 ---------------------------------------------------------
 
-    https://github.com/avamsykiran/MongoDB_02Aug21_06Aug21_0900100.git
+   https://github.com/avamsykiran/MongoDB_11Aug21_16Aug21_14001600.git
 
 
     What is MongoDB?
@@ -27,7 +27,6 @@ MongoDB
                     Channel
                     Packages
                     Subscriber
-
 
                     Subscriber
                         has multiple Packages
@@ -63,6 +62,7 @@ MongoDB
         MongodB Client
 
                 https://fastdl.mongodb.org/windows/mongodb-windows-x86_64-5.0.1-signed.msi
+                https://fastdl.mongodb.org/osx/mongodb-macos-x86_64-5.0.2.tgz
 
 
     Start Your Server:
