@@ -66,10 +66,13 @@ MongoDB
 
 
     Start Your Server:
+                            mongod --version
                             mongod --dbpath ./data
                             
     Start Your Commad Line Cleint
                             mongo
+    
+    GUI     Mongo Compass
 
 
     MongodB DB structure                        RDBMS DB Structure 
@@ -94,11 +97,10 @@ MongoDB
     db.COLLECTION_NAME.drop()       is used to delete a collection completly
 
     db.COLLECTION_NAME.insertOne({}})               one record will be inserted
-    db.COLLECTION_NAME.insert({}})
+    db.COLLECTION_NAME.insert({})
     db.COLLECTION_NAME.insertMany([{},{},{}])       bulk insertions
     db.COLLECTION_NAME.insert([{},{},{}])
 
-    
     db.COLLECTION_NAME.update({"key":"value"}, {$set{"key":"newValue"}})                updates first matching record
     db.COLLECTION_NAME.findOneAndUpdate({"key":"value"}, {$set{"key":"newValue"}})
     db.COLLECTION_NAME.updateOne({"key":"value"}, {$set{"key":"newValue"}})
@@ -120,7 +122,6 @@ MongoDB
     db.COLLECTION_NAME.find().limit(NUMBER)         limiting
     db.COLLECTION_NAME.find().limit(NUMBER).skip(NUMBER)
     db.COLLECTION_NAME.find().sort({KEY:1/0/-1})
-
     
     Opertion Cluases
 
@@ -174,6 +175,8 @@ MongoDB
         {_id:20,title:"Curd",unit:"500g Packet",rate:45,category:"OTHERS"}
     ])
 
+    db.goods.find().limit(5)
+    db.goods.find().limit(5).skip(5)
     db.goods.find().skip(db.goods.count()-5)
     db.goods.find({$and: [{rate:{$gt:100}},{category:"BEVERAGES"}] })
     db.goods.find({$and: [{rate:{$gt:600}},{$or:[{category:"BEVERAGES"},{category:"OIL"}]}] })
