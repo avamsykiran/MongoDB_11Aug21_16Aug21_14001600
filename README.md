@@ -279,6 +279,37 @@ MongoDB
         }
     })
 
+    db.goods.validate()
+
+    Sharding
+    ----------------------------------------------------------------------
+
+        is the mongodb's approach to ensure availability .
+
+        Mongo database is partitioned accross multiple server called Shards.
+        
+        These 'Shards' run behind a running channel called 'Config Servers'.
+        
+        the config server will dictate where and hwo the Shards are executed and 
+        alo thier runtime slots are managed by the config server.. 
+
+        Query Server are those that actually mongod instacnes that keep track of
+        the indexes of the data contained on the Shards. The query servers
+        willl be the ones that get hit by queries and these server will bring data
+        from respective shards and compose them according to the query and then
+        the results are responded.
+
+        Router is a proxy server that takes care of communication between the
+        query server and the shards.
+
+                                                            ConfigServer                
+                                                                |
+                                                                |
+                                                                |
+                             QryServer3                       Shard2
+                             QryServer2 ----> Routers ------> Shard1
+        Client  ---------->  QryServer1                       Shard3  
+
     MongoDB with Java
     -----------------------------------------------------------------------
         https://www.mongodb.com/blog/post/getting-started-with-mongodb-and-java-part-i
