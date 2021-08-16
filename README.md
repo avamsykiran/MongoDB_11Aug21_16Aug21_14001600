@@ -140,15 +140,7 @@ MongoDB
         Or                      { $or: [ {<key1>:<value1>}, { <key2>:<value2>} ] }
         Not                     { $NOT: [ {key1: value1}, {key2:value2} ] }
 
-    db.COLLECTION_NAME.aggregate(AGGREGATE_OPERATION)
-
-        Operation	            Syntax	
-        ============================================================================
-        $sum	                db.mycol.aggregate([{$group : {_id : "$grpcol", sumCol : {$sum : "$col"}}}])
-        $avg	                db.mycol.aggregate([{$group : {_id : "$grpCol", avgCol : {$avg : "$col"}}}])
-        $min	                db.mycol.aggregate([{$group : {_id : "$grpCol", minCol : {$min : "$col"}}}])
-        $max	                db.mycol.aggregate([{$group : {_id : "$grpCol", maxCol : {$max : "$col"}}}])
-        
+   
 
     //lets create a bulky collection to learn retrivals
 
@@ -182,11 +174,85 @@ MongoDB
     db.goods.find({$and: [{rate:{$gt:600}},{$or:[{category:"BEVERAGES"},{category:"OIL"}]}] })
     db.goods.find({$and: [{rate:{$gt:600}},{$or:[{category:"BEVERAGES"},{category:"OIL"}]}] },{title:1,rate:1,_id:0})
     db.goods.find().sort({category:1,rate:1})
-    db.goods.aggregate([{$group : {_id : "$category", totalRate : {$sum : "$rate"}}}])
-    db.goods.aggregate([{$group : {_id : "$category", avgRate : {$avg : "$rate"}}}])
-    db.goods.aggregate([{$group : {_id : "$category", minRate : {$min : "$rate"}}}])
-    db.goods.aggregate([{$group : {_id : "$category", maxRate : {$max : "$rate"}}}])
-    db.goods.aggregate([{$group : {_id : "$category", maxRate : {$max : "$rate"}}},{$sort:{maxRate:1}}])
+
+
+    Aggregation Framework
+    ==================================================================================================
+
+        db.COLLECTION_NAME.aggregate(AN_ARRAY_OF_AGGREGATE_STAGES)
+
+        Operation	            Syntax	
+        ---------------------------------------------------------------------------------------------------
+        $sum	                db.mycol.aggregate([{$group : {_id : "$grpcol", sumCol : {$sum : "$col"}}}])
+        $avg	                db.mycol.aggregate([{$group : {_id : "$grpCol", avgCol : {$avg : "$col"}}}])
+        $min	                db.mycol.aggregate([{$group : {_id : "$grpCol", minCol : {$min : "$col"}}}])
+        $max	                db.mycol.aggregate([{$group : {_id : "$grpCol", maxCol : {$max : "$col"}}}])
+        
+        db.goods.aggregate([{$group : {_id : "$category", totalRate : {$sum : "$rate"}}}])
+        db.goods.aggregate([{$group : {_id : "$category", avgRate : {$avg : "$rate"}}}])
+        db.goods.aggregate([{$group : {_id : "$category", minRate : {$min : "$rate"}}}])
+        db.goods.aggregate([{$group : {_id : "$category", maxRate : {$max : "$rate"}}}])
+        
+
+        Pipeline Operators
+        ---------------------------------------------------------------------------------------------------
+        $match          filtering  {expr: {filter expression}}
+        $sort           sorting
+        $group          grouping
+        $limit          limiting
+        $skip           skiping for pagiantions
+        $project        projection
+        $lookup         performs a left-outer join
+
+                    $lookup:   {
+                        from: <collection to join>,
+                        localField: <field from the input documents>,
+                        foreignField: <field from the documents of the "from" collection>,
+                        as: <output array field>
+                    }
+
+        db.goods.aggregate([{$group : {_id : "$category", maxRate : {$max : "$rate"}}},{$sort:{maxRate:1}}])
+
+        db.goods.aggregate([
+                {$match:{rate:{$gte:150}}},
+                {$group:{_id:"$category",avgRate:{$avg:"$rate"}}} ,
+                {$match:{avgRate:{$gte:2000}}},
+                {$project:{_id:0,avgRate:1}}
+        ])
+
+        db.orders.insert([
+            {_id:1,goodId:1,qty:50},
+            {_id:2,goodId:3,qty:5},
+            {_id:3,goodId:3,qty:15},
+            {_id:4,goodId:4,qty:6},
+            {_id:5,goodId:2,qty:9},
+            {_id:6,goodId:10,qty:12},
+            {_id:7,goodId:7,qty:16},
+            {_id:8,goodId:11,qty:17},
+            {_id:9,goodId:12,qty:5}
+        ])
+
+        db.goods.aggregate([
+            {
+                $lookup:   {
+                        from: "orders",
+                        localField: "_id",
+                        foreignField: "goodId",
+                        as: "purchases"
+                    }
+            }
+        ])
+
+          db.orders.aggregate([
+            {
+                $lookup:   {
+                        from: "goods",
+                        localField: "goodId",
+                        foreignField: "_id",
+                        as: "goodDetails"
+                    }
+            }
+        ])
 
     Mongo DB Data Types
     -------------------------------------------------------------
